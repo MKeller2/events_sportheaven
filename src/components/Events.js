@@ -6,12 +6,12 @@ import ListItems from "./ListItems";
 // const data = { data: {"code":"SUCCESS","message":[{"id":2,"lat":"37.42513212210951","lng":"-122.08844527602196","seatsAllowed":6,"seatsTaken":1,"name":"footbal avec popo","dateCreation":"2021-10-21T15:05:35.000Z","dateEvent":"2021-10-06T15:05:27.000Z","sport":"Football","description":null,"createdBy":1,"participants":[{"id":1,"pseudo":"Paul","profilePicPath":"./profilepicture.png"},{"id":4,"pseudo":"Mathieu","profilePicPath":"./profilepicture.png"}]},{"id":4,"lat":"37.426528903310476","lng":"-122.08657443523408","seatsAllowed":6,"seatsTaken":1,"name":"foot au parc","dateCreation":"2021-10-21T15:13:25.000Z","dateEvent":"2021-10-06T15:12:20.000Z","sport":"Football","description":null,"createdBy":1,"participants":[{"id":1,"pseudo":"Paul","profilePicPath":"./profilepicture.png"}]},{"id":5,"lat":"48.69392580430736","lng":"6.189378350973129","seatsAllowed":6,"seatsTaken":1,"name":"Bonjour Thomas","dateCreation":"2021-10-21T15:14:08.000Z","dateEvent":"2021-10-06T19:13:28.000Z","sport":"Basketball","description":null,"createdBy":1,"participants":[{"id":1,"pseudo":"Paul","profilePicPath":"./profilepicture.png"}]},{"id":6,"lat":"48.682309920465975","lng":"6.173613667488098","seatsAllowed":6,"seatsTaken":0,"name":"Soirée chez benou","dateCreation":"2021-10-21T15:16:58.000Z","dateEvent":"2021-10-08T12:01:11.000Z","sport":"Basketball","description":null,"createdBy":1,"participants":[]},{"id":7,"lat":"37.41824901299005","lng":"-122.08259303122759","seatsAllowed":4,"seatsTaken":0,"name":"balayage de paul brunner","dateCreation":"2021-10-21T15:18:54.000Z","dateEvent":"2021-10-06T15:18:22.000Z","sport":"Basketball","description":null,"createdBy":1,"participants":[]},{"id":8,"lat":"48.697314160108455","lng":"6.186669655144215","seatsAllowed":5,"seatsTaken":1,"name":"Test","dateCreation":"2021-10-21T15:22:22.000Z","dateEvent":"2021-10-02T17:22:49.000Z","sport":"Basketball","description":null,"createdBy":1,"participants":[{"id":1,"pseudo":"Paul","profilePicPath":"./profilepicture.png"}]},{"id":10,"lat":"48.81770636","lng":"2.3754985","seatsAllowed":10,"seatsTaken":1,"name":"Foot ipsa","dateCreation":"2021-10-28T13:45:13.000Z","dateEvent":"2021-10-06T15:45:39.000Z","sport":"Football","description":null,"createdBy":1,"participants":[{"id":1,"pseudo":"Paul","profilePicPath":"./profilepicture.png"}]},{"id":12,"lat":"37.4253137104644","lng":"-122.08055622875692","seatsAllowed":6,"seatsTaken":1,"name":"event test paulin","dateCreation":"2021-11-12T11:19:52.000Z","dateEvent":"2021-11-07T04:18:37.000Z","sport":"Basketball","description":null,"createdBy":1,"participants":[{"id":1,"pseudo":"Paul","profilePicPath":"./profilepicture.png"},{"id":8,"pseudo":"popo","profilePicPath":"./profilepicture.png"}]},{"id":13,"lat":"37.42307471126208","lng":"-122.08109736442567","seatsAllowed":9,"seatsTaken":1,"name":"etst","dateCreation":"2021-11-12T12:03:36.000Z","dateEvent":"2021-11-08T12:03:17.000Z","sport":"Volleyball","description":null,"createdBy":1,"participants":[{"id":1,"pseudo":"Paul","profilePicPath":"./profilepicture.png"}]},{"id":14,"lat":"37.421998333333335","lng":"-122.08400000000002","seatsAllowed":6,"seatsTaken":1,"name":"ee","dateCreation":"2021-11-12T12:05:25.000Z","dateEvent":"2021-11-07T18:04:28.000Z","sport":"Basketball","description":null,"createdBy":1,"participants":[{"id":1,"pseudo":"Paul","profilePicPath":"./profilepicture.png"}]},{"id":15,"lat":"37.41933570759411","lng":"-122.09011159837246","seatsAllowed":4,"seatsTaken":1,"name":"ghfjfj","dateCreation":"2021-11-14T14:09:00.000Z","dateEvent":"2021-11-02T14:08:27.000Z","sport":"Football","description":null,"createdBy":1,"participants":[{"id":1,"pseudo":"Paul","profilePicPath":"./profilepicture.png"}]}]}}
 
 
-export default function Events() {    
+export default function Events() {
     const [list, setList] = useState();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState();
 
-    
+
     async function activities(sessionId, refreshToken, lat, lng) {
       try {
           const value = await axios.post("https://sportheaven.herokuapp.com/getActivities", {"sessionId": sessionId, "refreshToken": refreshToken, "lat": lat, "lng": lng});
@@ -27,7 +27,7 @@ export default function Events() {
     useEffect(() => {
       activities(1, "oij", "67.31169", "-139.10211");
     }, []);
-      return ( 
+      return (
       <div style={{
         position: 'absolute', left: '50%', top: '50%',
         transform: 'translate(-50%, -50%)',
@@ -37,8 +37,16 @@ export default function Events() {
           <span> Liste des événements </span>
         </h3>
       <div>
+        <span>Filtres Status</span>
+        <select> En cours, A venir</select>
+      </div>
+      <div>
+        <span>Filtres Sport</span>
+        <select>Nothing, Football, Volleyball, Basketball </select>
+      </div>
+      {list_event = /* filtres type*/Nothing ? list_event : sport_filter(value, list_event)}
+      <div>
       {
-        
         loading && !error ? <span>{!error ? 'loading' : error}</span> : list.data.message.sort((a, b) => {return new Date(a.dateEvent) - new Date(b.dateEvent)}).map(elem => {
           return (
             <ListItems key={elem.id} day={getDay(elem.dateEvent)} month={monthLetters(elem.dateEvent)} date={formatTime(elem.dateEvent)} seats={elem.seatsTaken} maxSeats={elem.seatsAllowed} title={elem.name} sport={elem.sport}/>
@@ -97,7 +105,7 @@ function monthLetters(time) {
     case 5:
       return "May";
     case 6:
-      return "Jun";   
+      return "Jun";
     case 7:
       return "Jul";
     case 8:
@@ -113,4 +121,14 @@ function monthLetters(time) {
     default:
       return "TAMERE"
     }
+}
+
+function sport_filter(sport, list_event) {
+  let result = [];
+  for (let i = 0; i < list_event.length; i++) {
+    if (list_event[i].sport === sport) {
+      result.push(list_event[i]);
+    }
+  }
+  return result;
 }
